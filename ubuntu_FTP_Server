@@ -44,7 +44,40 @@ sudo mkdir /srv/ftp/new_location
 sudo usermod -d /srv/ftp/new_location ftp
 
 Restart the vsftpd service to apply the changes:
+Authenticate FTP Users
+
+If you want to let authenticated users upload files, edit the vsftpd.conf file by entering the following:
+
+sudo nano /etc/vsftpd.conf
+
+Find the entry labeled write_enable=NO, and change the value to “YES.”
+Save the file, exit, then restart the FTP service with the following:
+
+sudo systemctl restart vsftpd.service
 
 sudo systemctl restart vsftpd.service
 
 Now, you can put any files you want to share via FTP into the /srv/ftp folder (if you left it as the default), or the /srv/ftp/new_location/ directory (if you changed it).
+Securing FTP
+
+Numerous exploits take advantage of unsecured FTP servers. In response, there are several configuration options in vsftpd.conf that can help secure your FTP server.
+Limit User Access
+
+One method is to limit users to their home directory. Open vsftpd.conf in an editor and uncomment the following command:
+
+chroot_local_user=YES
+allow_writeable_chroot=YES
+local_root=/srv/ftp/image   # FTP folder
+Create a User List File
+
+To create a list file, edit /etc/vsftpd.chroot_list, and add one user per line.
+
+Instruct your FTP server to limit this list of users to their own home directories by editing vsftpd.conf:
+
+chroot_local_user=YES
+
+chroot_list_file=/etc/vsftpd.chroot_list
+
+The image ilustrates the edits that were made:
+
+
